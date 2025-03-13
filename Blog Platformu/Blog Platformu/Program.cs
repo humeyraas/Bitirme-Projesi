@@ -1,9 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using 
+ Blog_Platformu.Models ;
 var builder = WebApplication.CreateBuilder(args);
+// Sizin verdiğiniz kodlar buraya eklenecek
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<BlogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BlogDb")));
+
+builder.Services.AddSession();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
