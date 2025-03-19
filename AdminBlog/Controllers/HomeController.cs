@@ -16,15 +16,48 @@ public class HomeController : Controller
     }
 
     public async Task<IActionResult> AddCategory(Category category){
-        await _context.AddAsync(category);
+        if (category.Id == 0 ){
+         await _context.AddAsync(category);   
+        } else{
+            _context.Update(category);
+        }
+        
         await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Category));
     }
 
+    public async Task<IActionResult> AddAuthor(Author author){
+        if (author.Id == 0 ){
+         await _context.AddAsync(author);   
+        } else{
+            _context.Update(author);
+        }
+        
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Author));
+    }
+
+    public async Task<IActionResult> AuthorDetails(int Id){
+        var author = await _context.Author.FindAsync(Id);
+        return Json(author);
+    }
+
+    public async Task<IActionResult> CategoryDetails(int Id){
+        var category = await _context.Category.FindAsync(Id);
+        return Json(category);
+    }
+
     public IActionResult Category()
     {
         List<Category> list = _context.Category.ToList();
+        return View(list);
+    }
+
+    public IActionResult Author()
+    {
+        List<Author> list = _context.Author.ToList();
         return View(list);
     }
 
@@ -34,6 +67,14 @@ public class HomeController : Controller
         _context.Remove(category);
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Category));
+    }
+
+    public async Task<IActionResult> DeleteAuthor(int? Id)
+    {
+        var author = await _context.Author.FindAsync(Id);
+        _context.Remove(author);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Author));
     }
 
     public IActionResult Privacy()
